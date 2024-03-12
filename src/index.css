@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.image:hover .poster {
+  @apply opacity-100 !scale-100;
+}

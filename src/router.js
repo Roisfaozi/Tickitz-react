@@ -1,12 +1,12 @@
 import { createBrowserRouter } from 'react-router-dom'
-import Header from './components/Header'
+import Home from './pages/Home'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/Register'
 
 export default createBrowserRouter([
   {
     path: '/',
-    element: <Header />,
+    element: <Home />,
   },
   {
     path: '/login',

@@ -71,7 +71,7 @@ function AuthForn({ authAction }) {
           </Label>
         </div>
 
-        <Button className='w-full my-6 font-bold rounded h-16'>
+        <Button type='submit' className='w-full my-6 font-bold rounded h-16'>
           {authAction}
         </Button>
         {authAction === 'register' ? (
