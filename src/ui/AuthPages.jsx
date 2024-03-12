@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import background from '../assets/background.png'
 import logo from '../assets/tickitz 1.png'
 import { Button } from '../components/button'
@@ -20,12 +21,16 @@ const AuthPages = ({ authAction }) => {
       style={{ backgroundImage: bgUrl }}>
       <div className='flex flex-col items-center relative top-[90px]'>
         <div className='logo'>
-          <a href='/' rel='noopener noreferrer'>
+          <Link to='/' rel='noopener noreferrer'>
             <img src={logo} alt='Tickitz' />
-          </a>
+          </Link>
         </div>
         <div className='bg-white rounded-md py-7 px-16 w-full max-w-lg'>
-          <Steps currentStep={currentStep} stepTotal={NUMBER_OF_STEPS} />
+          {authAction === 'register' ? (
+            <Steps currentStep={currentStep} stepTotal={NUMBER_OF_STEPS} />
+          ) : (
+            <LoginHeader />
+          )}
           <AuthForn authAction={authAction} />
           <div className='flex items-center justify-betwwen w-full gap-8'>
             <hr className='h-px my-8 w-full bg-gray-200 border-0 dark:bg-gray-700'></hr>
@@ -84,6 +89,19 @@ const AuthPages = ({ authAction }) => {
         </div>
       </div>
     </div>
+  )
+}
+
+export const LoginHeader = () => {
+  return (
+    <>
+      <h1 className='w-full text-start sm:text-3xl text-xl  text-text-primary font-bold sm:mb-6 mb-4'>
+        Welcome Back👋
+      </h1>
+      <p className='sm:text-lg text-[13px]   text-secondary leading-[18px] mb-6'>
+        Sign in with your data that you entered during your registration
+      </p>
+    </>
   )
 }
 

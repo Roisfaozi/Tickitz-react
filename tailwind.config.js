@@ -183,7 +183,7 @@ export default {
       'text-label': '#6e7191',
       'text-litle': '#14142b',
       'text-gray': '#dedede',
-      'text-normal': '#121212',
+      'text-primary': '#121212',
     }),
     columns: {
       auto: 'auto',

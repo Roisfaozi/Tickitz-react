@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { Button } from '../button'
 import { Checkbox, Input, Label } from '../input'
 
@@ -76,10 +77,10 @@ function AuthForn({ authAction }) {
         {authAction === 'register' ? (
           <p className='text-base font-medium text-start'>
             Already have an account?{' '}
-            <a href='/login' className='text-primary'>
+            <Link to='/login' className='text-primary'>
               {' '}
               Log in
-            </a>
+            </Link>
           </p>
         ) : (
           <p className='text-base text-primary text-right w-full'>
