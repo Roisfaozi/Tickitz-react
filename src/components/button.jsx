@@ -12,7 +12,7 @@ const buttonVariants = cva(
         social: 'bg-white text-secondary hover:bg-gray-100',
         outline:
           'bg-transparent border border-primary hover:bg-gray-100 text-primary',
-        clean: 'bg-white text-primar hover:bg-gray-100',
+        clean: 'bg-white text-primary hover:bg-gray-100',
         ghost: 'bg-transparent data-[state=open]:bg-transparent ',
         link: 'bg-transparent underline-offset-4 hover:underline text-slate-900  hover:bg-transparent ',
       },
