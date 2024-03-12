@@ -1,15 +1,18 @@
 import { createBrowserRouter } from 'react-router-dom'
-import Home from './pages/home/home'
-import Product from './pages/product/product'
-
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/Register'
 
 export default createBrowserRouter([
-    {
-        path: '/',
-        element: <Home />
-    },
-    {
-        path: '/products/:slug',
-        element: <Product />
-    }
+  {
+    path: '/',
+    element: <RegisterPage />,
+  },
+  {
+    path: '/login',
+    element: <LoginPage />,
+  },
+  {
+    path: '/register',
+    element: <RegisterPage />,
+  },
 ])
