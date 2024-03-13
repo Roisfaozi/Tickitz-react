@@ -1,7 +1,10 @@
 import React from 'react'
+import { movieList } from '../lib/dumy'
 import MovieCard from './MovieCard'
 
 function MovieSection(props) {
+  const movieSlice = movieList.slice(0, 4)
+
   return (
     <div className='w-full py-[50px] px-3'>
       <div className='flex items-center w-full justify-between'>
@@ -22,9 +25,13 @@ function MovieSection(props) {
       </div>
 
       <div className='md:overflow-x-auto overflow-x-scroll w-full h-fit flex gap-6'>
-        <MovieCard />
-        <MovieCard />
-        <MovieCard />
+        {movieSlice.map((movie, index) => (
+          <MovieCard
+            key={index}
+            movies={movie}
+            withRelease={props.withRelease}
+          />
+        ))}
       </div>
     </div>
   )

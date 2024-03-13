@@ -30,7 +30,7 @@ function Footer() {
               <a href='#'>Cinemas</a>
             </li>
             <li className='text-sm text-textLabel'>
-              <a href='/movie-list'>Movies List</a>
+              <a href='/movies'>Movies List</a>
             </li>
             <li className='text-sm text-textLabel'>
               <a href='#'>Notification</a>

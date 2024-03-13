@@ -43,7 +43,7 @@ function Header() {
             </li>
             <li>
               <Link
-                to='/movie-list'
+                to='/movies'
                 className='text-md no-underline text-neutralGray900'>
                 Movie
               </Link>
@@ -120,14 +120,14 @@ function Header() {
             </li>
             <li>
               <Link
-                to='/movie-list'
+                to='/movies'
                 className='text-3xl text-neutralGray900 no-underline font-bold'>
                 Movie
               </Link>
             </li>
             <li>
               <Link
-                to='/movie-list'
+                to='/movies'
                 className='text-3xl text-neutralGray900 no-underline font-bold'>
                 Buy Ticket
               </Link>

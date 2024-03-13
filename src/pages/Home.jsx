@@ -18,6 +18,7 @@ function Home() {
         <MovieSection
           sectionTag='UPCOMING MOVIES'
           sectionTitle='Exciting Movie Coming Soon'
+          withRelease={true}
           children={<Arrow />}
         />
         <SubscribeSection />
