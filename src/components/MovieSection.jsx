@@ -1,9 +1,9 @@
 import React from 'react'
-import { movieList } from '../lib/dumy'
+import { movieDummy } from '../lib/dumy'
 import MovieCard from './MovieCard'
 
 function MovieSection(props) {
-  const movieSlice = movieList.slice(0, 4)
+  const movieSlice = movieDummy.slice(0, 4)
 
   return (
     <div className='w-full py-[50px] px-3'>

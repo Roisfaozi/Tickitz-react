@@ -65,6 +65,8 @@ export default {
       right: 'right',
       'right-bottom': 'right bottom',
       'right-top': 'right top',
+      'top-center': 'top center',
+      80: '80%',
       top: 'top',
     },
     backgroundSize: {
@@ -703,6 +705,7 @@ export default {
       max: 'max-content',
       fit: 'fit-content',
       prose: '65ch',
+      desktop: '1106px',
       ...breakpoints(theme('screens')),
     }),
     minHeight: ({ theme }) => ({

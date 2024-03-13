@@ -9,7 +9,7 @@ function Home() {
   return (
     <>
       <Header />
-      <main className='w-full max-w-[1106px] h-full m-auto bg-white'>
+      <main className='w-full max-w-[desktop] h-full m-auto bg-white'>
         <HomeContent />
         <MovieSection
           sectionTag='Movies'

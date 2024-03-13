@@ -2,7 +2,7 @@ import BlackWidow from '../assets/black-widow.png'
 import Spider from '../assets/poster-spider.png'
 import Tennet from '../assets/tenet.png'
 import Withces from '../assets/withces.png'
-export const movieList = [
+export const movieDummy = [
   {
     id: 1,
     title: 'Black Widow',

@@ -10,7 +10,7 @@ import youtube from '../assets/youtube.svg'
 function Footer() {
   return (
     <footer className='bg-white w-full px-0 py-10'>
-      <div className='flex flex-col sm:flex-row justify-between max-w-[1106px] m-auto my-0'>
+      <div className='flex flex-col sm:flex-row justify-between max-w-[desktop] m-auto my-0'>
         <div className='flex-[1_0_13%] items-start justify-center px-2.5 py-6'>
           <div className='mb-2.5'>
             <a href='/' rel='noopener noreferrer'>
@@ -134,7 +134,7 @@ function Footer() {
           </div>
         </div>
       </div>
-      <div className='max-w-[1106px] text-center mt-5 m-auto'>
+      <div className='max-w-[desktop] text-center mt-5 m-auto'>
         <p className='text-[13px] font-light px-2.5 py-6 text-textLabel'>
           © 2020 Tickitz. All Rights Reserved.
         </p>
