@@ -13,13 +13,14 @@ const buttonVariants = cva(
         outline:
           'bg-transparent border border-primary hover:bg-gray-100 text-primary',
         clean: 'bg-white text-primary hover:bg-gray-100',
-        ghost: 'bg-transparent data-[state=open]:bg-transparent ',
+        ghost: 'hover:bg-gray-100 data-[state=open]:bg-transparent ',
         link: 'bg-transparent underline-offset-4 hover:underline text-slate-900  hover:bg-transparent ',
       },
       size: {
         default: 'h-10 py-2 px-4',
-        sm: 'h-9 px-2 rounded-md',
-        lg: 'h-12 px-8 rounded-md',
+        sm: 'h-9 px-2 ',
+        lg: 'h-12 px-8 ',
+        icon: 'h-10 w-10',
       },
     },
     defaultVariants: {

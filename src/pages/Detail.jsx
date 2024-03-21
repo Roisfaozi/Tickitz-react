@@ -1,6 +1,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import poster from '../assets/spiderman.png'
+import Footer from '../components/Footer'
 import Header from '../components/Header'
 import { movieDummy } from '../lib/dumy'
 import Moviedetails from '../ui/Moviedetails'
@@ -17,7 +18,8 @@ function Detail() {
           className='w-full h-[413px] object-cover bg-no-repeat  bg-cover lg:bg-top-center bg-80'
           style={{ backgroundImage: posterImage }}></div>
       </section>
-      <Moviedetails movies={movieData[0]} />
+      <Moviedetails movie={movieData[0]} />
+      <Footer />
     </>
   )
 }

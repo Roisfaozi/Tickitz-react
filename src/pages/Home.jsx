@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
 import MovieSection from '../components/MovieSection'
@@ -6,19 +6,49 @@ import SubscribeSection from '../components/SubscribeSection'
 import HomeContent from '../components/organism/HomeContent'
 
 function Home() {
+  const [movies, setMovies] = useState([])
+  const [loading, setLoading] = useState(true)
+  useEffect(() => {
+    async function fetchMovies() {
+      try {
+        setLoading(true)
+        const response = await fetch(
+          'http://localhost:8001/api/v1/movies?pageSize=10'
+        )
+        if (response.ok) {
+          const data = await response.json()
+          setMovies(data)
+          console.log(data)
+        } else {
+          throw new Error('Failed to fetch movies')
+        }
+      } catch (error) {
+        console.tabel('Error fetching movies:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchMovies()
+  }, [])
+
   return (
     <>
       <Header />
-      <main className='w-full max-w-[desktop] h-full m-auto bg-white'>
+      <main className='w-full max-w-desktop h-full m-auto bg-white'>
         <HomeContent />
         <MovieSection
           sectionTag='Movies'
           sectionTitle='Exciting Movies That Should Be Watched Today'
+          movies={movies}
+          loading={loading}
         />
         <MovieSection
           sectionTag='UPCOMING MOVIES'
           sectionTitle='Exciting Movie Coming Soon'
           withRelease={true}
+          movies={movies}
+          loading={loading}
           children={<Arrow />}
         />
         <SubscribeSection />

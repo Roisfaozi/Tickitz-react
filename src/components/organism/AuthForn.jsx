@@ -3,19 +3,38 @@ import { Link } from 'react-router-dom'
 import { Button } from '../button'
 import { Checkbox, Input, Label } from '../input'
 
-function AuthForn({ authAction }) {
+function AuthForn({ authAction, formData, loading, onInputChange, onSubmit }) {
   return (
     <>
-      <form className='flex flex-col w-full max-w-[400px] items-start'>
+      <form
+        onSubmit={onSubmit}
+        className='flex flex-col w-full max-w-[400px] items-start'>
+        <div className='w-full h-auto'>
+          <Label for='username' className='text-titleInfo'>
+            username
+          </Label>
+          <Input
+            id='username'
+            name='username'
+            type='username'
+            placeholder='Username'
+            value={formData.username}
+            onChange={onInputChange}
+            className='my-3 h-16 pl-6'
+            required
+          />
+        </div>
         <div className='w-full h-auto'>
           <Label for='email' className='text-titleInfo'>
             Email
           </Label>
           <Input
             id='email'
+            name='email'
             type='email'
             placeholder='Email'
-            value='kakaka'
+            value={formData.email}
+            onChange={onInputChange}
             className='my-3 h-16 pl-6'
             required
           />
@@ -26,9 +45,11 @@ function AuthForn({ authAction }) {
           </Label>
           <Input
             id='password'
+            name='password'
             type='password'
             placeholder='Password'
-            value='kakaka'
+            value={formData.password}
+            onChange={onInputChange}
             className='my-3 h-16 pl-6'
             required
           />
@@ -71,7 +92,10 @@ function AuthForn({ authAction }) {
           </Label>
         </div>
 
-        <Button type='submit' className='w-full my-6 font-bold rounded h-16'>
+        <Button
+          disabeled={loading}
+          type='submit'
+          className='w-full my-6 font-bold rounded h-16'>
           {authAction}
         </Button>
         {authAction === 'register' ? (

@@ -12,7 +12,7 @@ function MoviesList() {
         <section
           id='hero_image'
           className='relative bg-cover bg-no-repeat w-full :h-[262px] md:h-[362px] lg:h-[462px] bg-black flex flex-col items-center px-[10px] lg:px-10'>
-          <div className='w-full h-full md:px-0 pt-9 sm:pt-15 md:pt-20 lg:pt-[104px] pb-7 px-[10px] max-w-[desktop]'>
+          <div className='w-full h-full md:px-0 pt-9 sm:pt-15 md:pt-20 lg:pt-[104px] pb-7 px-[10px] max-w-desktop'>
             <p className='md:text-lg sm:text-base text-sm font-semibold leading-[34px] text-white'>
               LIST MOVIE OF THE WEEK
             </p>
@@ -27,7 +27,7 @@ function MoviesList() {
           </div>
         </section>
         <MoviesDisplay />
-        <SubscribeSection />
+        <SubscribeSection className='max-w-desktop m-auto' />
       </main>
       <Footer />
     </>

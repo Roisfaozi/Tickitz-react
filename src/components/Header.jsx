@@ -16,7 +16,6 @@ function Header() {
         document.body.clientWidth
       if (screenWidth > 720) {
         setIsOpen(false)
-        console.log(isOpen)
       }
     }
 
@@ -28,7 +27,7 @@ function Header() {
   }, [isOpen])
   return (
     <div className='w-full border-b-2 border-solid border-b-gray bg-white'>
-      <header className='flex justify-between items-center h-[104px] max-w-[desktop] mx-auto my-0 lg:px-0 px-[10px]'>
+      <header className='flex justify-between items-center h-[104px] max-w-desktop mx-auto my-0 lg:px-0 px-[10px]'>
         <div className='logo'>
           <Link to='/' rel='noopener noreferrer'>
             <img src={logo} alt='Tickitz' />

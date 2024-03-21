@@ -1,15 +1,79 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
 import background from '../assets/background.png'
 import logo from '../assets/tickitz 1.png'
 import { Button } from '../components/button'
 import AuthForn from '../components/organism/AuthForn'
 import Steps from '../components/organism/Steps'
+import useApi from '../hooks/useAPI'
+import { login } from '../store/reducer/users'
 
 const AuthPages = ({ authAction }) => {
   const bgUrl = `url(${background})`
   const [currentStep, setCurrentStep] = useState(1)
   const NUMBER_OF_STEPS = 3
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+  })
+
+  const api = useApi()
+
+  const { isAuth } = useSelector((s) => s.users)
+  useEffect(() => {
+    if (isAuth) {
+      navigate('/')
+    }
+  }, [isAuth])
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+
+    setFormData({
+      ...formData,
+      [name]: value,
+    })
+  }
+
+  const [loading, setLoading] = useState(false)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    try {
+      if (authAction === 'login') {
+        api({
+          method: 'POST',
+          url: '/auth/login',
+          data: formData,
+        })
+          .then(({ data }) => {
+            dispatch(login(data.token))
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      } else if (authAction === 'register') {
+        api({
+          method: 'POST',
+          url: '/auth/register',
+          data: formData,
+        })
+          .then(({ data }) => {
+            dispatch(login(data.token))
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
+    } catch (error) {
+      console.error('Error occurred:', error)
+    }
+    setLoading(false)
+  }
 
   const goToNextStep = () =>
     setCurrentStep((prev) => (prev === NUMBER_OF_STEPS - 1 ? prev : prev + 1))
@@ -31,7 +95,13 @@ const AuthPages = ({ authAction }) => {
           ) : (
             <LoginHeader />
           )}
-          <AuthForn authAction={authAction} />
+          <AuthForn
+            authAction={authAction}
+            formData={formData}
+            loading={loading}
+            onInputChange={handleInputChange}
+            onSubmit={handleSubmit}
+          />
           <div className='flex items-center justify-betwwen w-full gap-8'>
             <hr className='h-px my-8 w-full bg-gray-200 border-0 dark:bg-gray-700'></hr>
             <p className='text-secondary text-xs'>Or</p>

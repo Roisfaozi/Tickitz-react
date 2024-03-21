@@ -3,8 +3,16 @@ import { movieDummy } from '../lib/dumy'
 import MovieCard from './MovieCard'
 
 function MovieSection(props) {
+  const movies = props.movies.data
+  console.log(props)
   const movieSlice = movieDummy.slice(0, 4)
 
+  if (props.loading)
+    return (
+      <div className='w-full h-full flex justify-center items-center'>
+        <p>Loading...</p>
+      </div>
+    )
   return (
     <div className='w-full py-[50px] px-3'>
       <div className='flex items-center w-full justify-between'>
@@ -23,9 +31,8 @@ function MovieSection(props) {
         </div>
         {props.children}
       </div>
-
-      <div className='md:overflow-x-auto overflow-x-scroll w-full h-fit flex gap-6'>
-        {movieSlice.map((movie, index) => (
+      <div className='md:overflow-x-auto overflow-x-scroll w-full h-full flex gap-6'>
+        {movies.map((movie, index) => (
           <MovieCard
             key={index}
             movies={movie}

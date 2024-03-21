@@ -4,7 +4,7 @@ import MoviesGrid from '../components/organism/MoviesGrid'
 
 function MoviesDisplay() {
   return (
-    <section className='w-full h-full pt-12 m-auto max-w-[desktop] lg:px-0 px-[10px]'>
+    <section className='w-full h-full pt-12 m-auto max-w-desktop lg:px-0 px-[10px]'>
       <FilterMovie />
       <MoviesGrid />
       <div className='w-full h-auto my-16 flex items-center justify-center gap-5'>
