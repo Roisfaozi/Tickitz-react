@@ -109,7 +109,7 @@ const Select = ({
 
   return (
     <div className='relative '>
-      <input type='hidden' name={name} value={state.value} />
+      <input type='hidden' name={name} value={value} />
       <button
         type='button'
         className={cn(selectVariants({ variant, size, className }))}
@@ -118,7 +118,7 @@ const Select = ({
           {iconLeft}
         </span>
         <span className='flex items-center'>
-          <span className='block truncate '>{state.value}</span>
+          <span className='block truncate '>{value}</span>
         </span>
         <span className='ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none'>
           {icon}

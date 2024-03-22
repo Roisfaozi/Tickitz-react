@@ -40,10 +40,18 @@ export default createBrowserRouter([
   },
   {
     path: '/admin/list-movies',
-    element: <ListMovie />,
+    element: (
+      <PrivateRoute>
+        <ListMovie />
+      </PrivateRoute>
+    ),
   },
   {
     path: '/admin/add-movie',
-    element: <AddMovie />,
+    element: (
+      <PrivateRoute>
+        <AddMovie />
+      </PrivateRoute>
+    ),
   },
 ])

@@ -1,9 +1,10 @@
-import { Button } from '../../components/button'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Button, buttonVariants } from '../../components/button'
 import {
   Pagination,
   PaginationContent,
   PaginationItem,
-  PaginationLink,
 } from '../../components/pagination'
 import Select from '../../components/select'
 import {
@@ -14,13 +15,48 @@ import {
   TableHeader,
   TableRow,
 } from '../../components/table'
-import { movieDummy } from '../../lib/dumy'
+import useApi from '../../hooks/useAPI'
+import {
+  convertMinutesToHoursAndMinutes,
+  formatedReleaseDate,
+} from '../../lib/utils'
 
 const movieOpt = ['September 2023', 'December 2023', 'January 2024']
 
 function TableListMovie() {
-  const formatedReleaseDate = (releaseDate) =>
-    new Date(releaseDate).toLocaleDateString()
+  const api = useApi()
+
+  const [movies, setMovies] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(0)
+
+  useEffect(() => {
+    fetchMovies(currentPage)
+  }, [currentPage])
+
+  function setPageQuery(pages) {
+    console.log(pages)
+    setCurrentPage(pages)
+  }
+
+  async function fetchMovies(page) {
+    try {
+      setLoading(true)
+      const response = await api.get(`/movies?page=${page}`)
+      if (response.status === 200) {
+        setMovies(response.data.data)
+        setTotalPages(Math.ceil(parseInt(response.data.meta.total) / 10))
+      } else {
+        throw new Error('Failed to fetch movies')
+      }
+    } catch (error) {
+      console.error('Error fetching movies:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <section className='w-full m-auto rounded-lg shadow-sm bg-white px-14 pt-14 pb-20 max-w-desktop '>
       <div className='flex flex-col md:flex-row justify-beteween items-center w-full mb-12 gap-3'>
@@ -28,7 +64,11 @@ function TableListMovie() {
           <h1 className='md:text-3xl text-lg md:font-bold font-semibold w-full'>
             List Movie
           </h1>
-          <Button className='flex gap-2 md:hidden'>
+          <Link
+            to='/admin/add-movie'
+            className={buttonVariants({
+              className: 'flex gap-2 md:hidden',
+            })}>
             <span>
               <svg
                 width='18'
@@ -53,7 +93,7 @@ function TableListMovie() {
               </svg>
             </span>{' '}
             Add
-          </Button>
+          </Link>
         </div>
         <div className='flex justify-end items-center w-full'>
           <div className='md:w-fit w-full mx-auto'>
@@ -83,90 +123,115 @@ function TableListMovie() {
             />
           </div>
 
-          <Button className='md:block hidden' size='lg'>
+          <Link
+            to='/admin/add-movie'
+            className={buttonVariants({
+              className: 'md:flex gap-2 hidden',
+            })}>
             Add Movies
-          </Button>
+          </Link>
         </div>
       </div>
-      <Table>
-        <TableHeader>
-          <TableRow className='*:text-center *:text-[#1F4173]'>
-            <TableHead>No</TableHead>
-            <TableHead className='w-[80px] font-medium'>Thumbnail</TableHead>
-            <TableHead className='font-medium'>Movie Name</TableHead>
-            <TableHead className='w-[150px] font-medium'>Category</TableHead>
-            <TableHead className='w-[100px] font-medium'>
-              Released Date
-            </TableHead>
-            <TableHead>Duration</TableHead>
-            <TableHead>Action</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {movieDummy.map((movie) => (
-            <TableRow
-              className='*:text-center *:text-sm  *:text-[#1F4173] *:p-2'
-              key={movie.id}>
-              <TableCell>{movie.id}</TableCell>
-              <TableCell>
-                <img
-                  className='w-11 h-9 mx-auto rounded-xl'
-                  src={movie.poster_url}
-                  alt={movie.title}
-                />
-              </TableCell>
-              <TableCell className=' !text-primary text-sm'>
-                {movie.title}
-              </TableCell>
-              <TableCell>{movie.genres.join(', ')}</TableCell>
-              <TableCell>{formatedReleaseDate(movie.release_date)}</TableCell>
-              <TableCell className='text-right'>{movie.duration}</TableCell>
-              <TableCell className='flex justify-evenly gap-2'>
-                <ActionIcon />
-              </TableCell>
+
+      {loading ? (
+        <>
+          <div className='animate-pulse flex flex-col gap-4'>
+            <div className='p-2 w-full h-10 bg-gray-200 rounded-md' />
+            <div className='p-2 w-full h-10 bg-gray-200 rounded-md' />
+            <div className='p-2 w-full h-10 bg-gray-200 rounded-md' />
+            <div className='p-2 w-full h-10 bg-gray-200 rounded-md' />
+            <div className='p-2 w-full h-10 bg-gray-200 rounded-md' />
+          </div>
+        </>
+      ) : (
+        <Table>
+          <TableHeader>
+            <TableRow className='*:text-center *:text-[#1F4173]'>
+              <TableHead>No</TableHead>
+              <TableHead className='w-[80px] font-medium'>Thumbnail</TableHead>
+              <TableHead className='font-medium'>Movie Name</TableHead>
+              <TableHead className='w-[150px] font-medium'>Category</TableHead>
+              <TableHead className='w-[100px] font-medium'>
+                Released Date
+              </TableHead>
+              <TableHead>Duration</TableHead>
+              <TableHead>Action</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <PaginationDemo />
+          </TableHeader>
+          <TableBody>
+            {movies.map((movie) => (
+              <TableRow
+                className='*:text-center *:text-sm  *:text-[#1F4173] *:p-2'
+                key={movie.movie_id}>
+                <TableCell>{movie.movie_id}</TableCell>
+                <TableCell>
+                  <img
+                    className='w-11 h-9 mx-auto rounded-xl'
+                    src={movie.poster_url}
+                    alt={movie.title}
+                  />
+                </TableCell>
+                <TableCell className=' !text-primary text-sm'>
+                  {movie.title}
+                </TableCell>
+                <TableCell>{movie.genres}</TableCell>
+                <TableCell>{formatedReleaseDate(movie.release_date)}</TableCell>
+                <TableCell className='text-right'>
+                  {convertMinutesToHoursAndMinutes(movie.duration)}
+                </TableCell>
+                <TableCell className='flex justify-evenly gap-2'>
+                  <ActionIcon movieId={movie.movie_id} />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
+
+      <PaginationDemo
+        totalPages={totalPages}
+        pageQuery={setPageQuery}
+        currentPage={currentPage}
+      />
     </section>
   )
 }
 export default TableListMovie
 
-export function PaginationDemo() {
+export function PaginationDemo({ totalPages, currentPage, pageQuery }) {
   return (
-    <Pagination className='mt-11'>
-      <PaginationContent className='gap-2'>
-        <PaginationItem>
-          <PaginationLink className='border border-gray' href='#'>
-            1
-          </PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href='#' isActive>
-            2
-          </PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink className='border border-gray' href='#'>
-            3
-          </PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink className='border border-gray' href='#'>
-            4
-          </PaginationLink>
-        </PaginationItem>
+    <Pagination className='my-16 '>
+      <PaginationContent className='gap-5'>
+        {Array.from({ length: totalPages }, (_, index) => {
+          const pageNumber = index + 1
+          return (
+            <PaginationItem key={index}>
+              <Button
+                variant='link'
+                className={`md:w-10 w-8 md:h-10 h-8 sm:h-8 max-h-10 rounded-md  flex items-center justify-center text-base font-medium text-center m-auto focus:ring-0 focus:ring-offset-0 focus:ring-transparent ${
+                  currentPage === pageNumber
+                    ? 'bg-primary  text-white'
+                    : 'bg-white  text-text-litle border border-text-gray'
+                } `}
+                isActive={currentPage === pageNumber}
+                onClick={() => pageQuery(pageNumber)}>
+                {pageNumber}
+              </Button>
+            </PaginationItem>
+          )
+        })}
       </PaginationContent>
     </Pagination>
   )
 }
 
-export const ActionIcon = () => {
+export const ActionIcon = ({ movieId }) => {
+  const navigate = useNavigate()
+
   return (
     <>
       <Button
+        onClick={() => navigate(`/movies/${movieId}`)}
         variant='icon'
         className='w-8 h-8 p-0 focus:ring-0 focus:ring-transparent focus:ring-offset-0 focus:bg-primary/80 bg-primary'>
         <svg

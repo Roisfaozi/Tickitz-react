@@ -18,7 +18,6 @@ function Home() {
         if (response.ok) {
           const data = await response.json()
           setMovies(data)
-          console.log(data)
         } else {
           throw new Error('Failed to fetch movies')
         }

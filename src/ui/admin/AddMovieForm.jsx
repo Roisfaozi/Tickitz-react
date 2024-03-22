@@ -1,10 +1,116 @@
+import { useEffect, useState } from 'react'
 import { Button } from '../../components/button'
 import { Input, Label } from '../../components/input'
 import Select from '../../components/select'
+import useApi from '../../hooks/useAPI'
 
 function AddMovieForm() {
-  const timeOpt = ['08:30', '10:30', '01:30']
+  const api = useApi()
+  const [genreOptions, setGenreOptions] = useState([])
+  const [directorOptions, setDirectorOptions] = useState([])
+  const [castOptions, setCastOptions] = useState([])
+  const [loading, setLoading] = useState(true)
 
+  const [data, setData] = useState({
+    img: 'https://www.svgrepo.com/show/522152/image-picture.svg',
+  })
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true)
+
+        const [genreResponse, directorResponse, castResponse] =
+          await Promise.all([
+            api.get('/genres'),
+            api.get('/directors'),
+            api.get('/casts'),
+          ])
+
+        setGenreOptions(
+          genreResponse.data.genres.map((genre) => ({
+            value: genre.genre_id,
+            label: genre.genre_name,
+          }))
+        )
+
+        setDirectorOptions(
+          directorResponse.data.directors.map((director) => ({
+            value: director.id,
+            label: director.name,
+          }))
+        )
+        setCastOptions(
+          castResponse.data.casts.map((cast) => ({
+            value: cast.id,
+            label: cast.name,
+          }))
+        )
+      } catch (error) {
+        console.log(error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [])
+  console.warn('genre', genreOptions)
+
+  // console.warn('directors', directorOptions)
+  // console.warn('casts', castOptions)
+  const changeHanlder = (e) => {
+    const datas = { ...data }
+    datas[e.target.name] = e.target.value
+    setData(datas)
+    console.log(data)
+  }
+
+  const fileHandler = (event) => {
+    const file = event.target.files[0]
+
+    if (file) {
+      const tmpdata = { ...data }
+      tmpdata['image'] = file
+      console.log(file, data)
+
+      let reader = new FileReader()
+      reader.onload = () => {
+        tmpdata['img'] = reader.result
+        setData(tmpdata)
+      }
+      reader.onerror = (error) => {
+        console.error('Error reading the file:', error)
+      }
+
+      reader.readAsDataURL(file)
+    } else {
+      console.log('No file selected or file is not valid.')
+    }
+  }
+
+  const submitHandler = (e) => {
+    e.preventDefault()
+
+    const formData = new FormData()
+    for (const key in data) {
+      formData.append(`${key}`, data[key])
+    }
+
+    api({
+      method: 'POST',
+      url: '/movies',
+      headers: { 'Content-Type': 'multipart/form-data' },
+      data: formData,
+    })
+      .then((_) => {
+        navigate('/')
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+  const dateOpt = ['12 April 2022', '13 April 2022', '14 April 2022']
   return (
     <section className='w-full m-auto rounded-lg shadow-sm bg-white px-14 pt-14 pb-20 max-w-3xl '>
       <div className='flex flex-col md:flex-row justify-beteween items-center w-full mb-12 gap-3'>
@@ -14,11 +120,13 @@ function AddMovieForm() {
           </h1>
         </div>
       </div>
-      <form className='flex flex-col w-full items-start gap-6'>
+      <form
+        onSubmit={submitHandler}
+        className='flex flex-col w-full items-start gap-6'>
         <div className='w-[20%] '>
           <div className='flex items-center justify-center w-full'>
             <label
-              htmlFor='dropzone-file'
+              htmlFor='file-upload'
               className='flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600'>
               <div className='flex flex-col items-center justify-center pt-5 pb-6'>
                 <svg
@@ -43,62 +151,71 @@ function AddMovieForm() {
                   SVG, PNG, JPG or GIF (MAX. 800x400px)
                 </p>
               </div>
-              <input id='dropzone-file' type='file' className='hidden' />
+              <input
+                id='file-upload'
+                name='file-upload'
+                type='file'
+                className='hidden'
+                onChange={fileHandler}
+              />
             </label>
           </div>
-          <Button type='submit' className='mt-3 w-full'>
-            Upload
-          </Button>
+          <Button className='mt-3 w-full'>Upload</Button>
         </div>
 
         <div className='w-full h-auto'>
-          <Label for='movie-title' className='text-titleInfo font-normal'>
+          <Label for='title' className='text-titleInfo font-normal'>
             Movie Name
           </Label>
           <Input
-            id='movie-title'
-            type='movie-title'
-            placeholder='movie-title'
-            value='kakaka'
+            id='title'
+            type='title'
+            name='title'
+            placeholder='title'
+            onChange={changeHanlder}
             className='my-3 h-16 pl-6 bg-gray-50 '
             required
           />
         </div>
         <div className='w-full h-auto'>
-          <Label for='category' className='text-titleInfo font-normal'>
+          <Label for='genre' className='text-titleInfo font-normal'>
             Category
           </Label>
           <Input
-            id='category'
-            type='category'
-            placeholder='Category'
-            value='kakaka'
+            id='genre'
+            type='genre'
+            name='genre'
+            placeholder='genre'
+            onChange={changeHanlder}
             className='my-3 h-16 pl-6 bg-gray-50 '
             required
           />
         </div>
         <div className='flex w-full md:flex-row flex-col justify-between gap-5'>
           <div className='relative w-full h-auto '>
-            <Label for='date' className='text-titleInfo font-normal'>
+            <Label for='release_date' className='text-titleInfo font-normal'>
               Release date:
             </Label>
             <Input
-              id='date'
-              type='date'
+              id='release_date'
+              type='release_date'
+              name='release_date'
+              onChange={changeHanlder}
               placeholder='date'
               className='my-3 h-16 pr-5 pl-10 bg-gray-50 '
               required
             />
           </div>
           <div className='relative w-full h-auto'>
-            <Label for='text' className='text-titleInfo font-normal'>
+            <Label for='duration' className='text-titleInfo font-normal'>
               Duration
             </Label>
             <Input
-              id='text'
-              type='text'
-              value='text'
-              placeholder='text'
+              id='duration'
+              type='duration'
+              name='duration'
+              onChange={changeHanlder}
+              placeholder='minutes'
               className='my-3 h-16  pr-5 pl-10 bg-gray-50 '
               required
             />
@@ -108,34 +225,43 @@ function AddMovieForm() {
           <Label for='director' className='text-titleInfo font-normal'>
             Director Name
           </Label>
-          <Input
-            id='director'
-            type='director'
-            placeholder='Director'
-            value='kakaka'
-            className='my-3 h-16 pl-6 bg-gray-50 '
+
+          <Select
+            name='genre'
+            value={data.genre}
+            options={genreOptions}
+            variant='silver'
+            text='lg'
+            onChange={(value) =>
+              setData((prevData) => ({ ...prevData, genre: value }))
+            }
+            placeholder='Select Genre'
+            className='my-3 h-16 pl-6 bg-gray-50'
             required
           />
         </div>
         <div className='w-full h-auto'>
-          <Label for='director' className='text-titleInfo font-normal'>
+          <Label for='casts' className='text-titleInfo font-normal'>
             Cast
           </Label>
           <Input
-            id='director'
-            type='director'
+            id='casts'
+            type='casts'
+            name='casts'
             placeholder='Director'
-            value='kakaka'
+            onChange={changeHanlder}
             className='my-3 h-16 pl-6 bg-gray-50 '
             required
           />
         </div>
         <div className='w-full h-auto'>
-          <Label for='cast' className='text-titleInfo font-normal'>
+          <Label for='synopsis' className='text-titleInfo font-normal'>
             Synopis
           </Label>
           <textarea
-            id='message'
+            id='synopsis'
+            name='synopsis'
+            onChange={changeHanlder}
             rows='4'
             className='block p-2.5 w-full text-base text-titleInfo my-3 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
             placeholder='Write your thoughts here...'></textarea>
@@ -148,9 +274,7 @@ function AddMovieForm() {
             id='location'
             type='location'
             placeholder='Location'
-            value='kakaka'
             className='my-3 h-16 pl-6 bg-gray-50 '
-            required
           />
         </div>
 
@@ -159,9 +283,9 @@ function AddMovieForm() {
             <Label for='location' className='text-titleInfo font-normal'>
               Select A Date
             </Label>
-            <div className='w-full mx-auto'>
+            {/* <div className='w-full mx-auto'>
               <Select
-                options={timeOpt}
+                options={dateOpt}
                 variant='silver'
                 text='lg'
                 optionWeight='medium'
@@ -221,7 +345,7 @@ function AddMovieForm() {
                   </svg>
                 }
               />
-            </div>
+            </div> */}
           </div>
           <div className='flex justify-start items-center gap-8'>
             <Button
@@ -257,7 +381,10 @@ function AddMovieForm() {
             </p>
           </div>
         </div>
-        <Button size='lg' className='w-full shadow-md shadow-primary/80'>
+        <Button
+          type='submit'
+          size='lg'
+          className='w-full shadow-md shadow-primary/80'>
           Save Movie
         </Button>
       </form>

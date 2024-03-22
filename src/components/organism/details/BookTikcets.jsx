@@ -2,7 +2,7 @@ import React from 'react'
 import { Button } from '../../button'
 import { Input, Label } from '../../input'
 import MovieTheaterSelector from './MovieTheaterOption'
-function BookTikcets() {
+function BookTikcets({ movieId }) {
   return (
     <section className='lg:w-full md:w-[900px] w-[90%] flex flex-col items-center mb-6 max-w-desktop px-[10px] m-auto'>
       <h2 className='mb-4 text-[32px] max-w-md'>Book Tickets</h2>

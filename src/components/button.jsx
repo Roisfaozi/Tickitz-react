@@ -14,7 +14,7 @@ const buttonVariants = cva(
           'bg-transparent border border-primary hover:bg-gray-100 text-primary',
         clean: 'bg-white text-primary hover:bg-gray-100',
         ghost: 'hover:bg-gray-100 data-[state=open]:bg-transparent ',
-        link: 'bg-transparent underline-offset-4 hover:underline text-slate-900  hover:bg-transparent ',
+        link: 'bg-transparent underline-offset-4 hover:underline text-slate-900  ',
       },
       size: {
         default: 'h-10 py-2 px-4',

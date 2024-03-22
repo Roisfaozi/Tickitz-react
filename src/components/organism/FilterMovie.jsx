@@ -1,13 +1,50 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import useApi from '../../hooks/useAPI'
+import { Button } from '../button'
 import { Input } from '../input'
 
-function FilterMovie() {
+function FilterMovie({ onSearch, onFilter }) {
+  const [searchQuery, setSearchQuery] = useState('')
+  const api = useApi()
+  const [genres, setGenres] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchGenres() {
+      try {
+        setLoading(true)
+        const response = await api.get('/genres')
+        if (response.status === 200) {
+          setGenres(response.data.genres)
+        } else {
+          throw new Error('Failed to fetch genres')
+        }
+      } catch (error) {
+        console.error('Error fetching genres:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchGenres()
+  }, [])
+  const handleSearchChange = (event) => {
+    event.preventDefault()
+    setSearchQuery(event.target.value)
+    onSearch(searchQuery)
+  }
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault()
+    onSearch(searchQuery)
+  }
+
   return (
     <div className='flex lg:flex-row flex-col gap-2 sm:gap-[10px] w-full h-full'>
       <div className='lg::w-1/2 w-full h-full min-h-11 flex items-start flex-col justify-center gap-3'>
         <p className='text-base font-semibold'>Cari Event</p>
 
-        <form className='w-full'>
+        <form onSubmit={handleSearchSubmit} className='w-full'>
           <label
             htmlFor='default-search'
             className='mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white'>
@@ -32,7 +69,9 @@ function FilterMovie() {
             <Input
               type='search'
               id='default-search'
-              placeholder='New Born Expert'
+              placeholder='Search Movies'
+              value={searchQuery}
+              onChange={handleSearchChange}
               className='block w-full p-4 ps-10 text-sm text-gray-900 border border-gray rounded-lg bg-white'
               required
             />
@@ -42,21 +81,34 @@ function FilterMovie() {
       <div className='w-full h-full min-h-11 flex items-start flex-col justify-center lg:gap-5 gap-2'>
         <p className='text-base font-semibold'>Filter</p>
         <div className='sm:flex grid grid-cols-4 grid-rows-2 sm:item-start sm:gap-3 gap-2'>
-          <div className='bg-primary w-full h-full py-1 sm:py-[10px] px-4 sm:px-6 text-white rounded-lg'>
-            <p className='text-sm font-normal sm:font-semibold'>Thriller</p>
-          </div>
-          <div className='bg-transparent w-full h-full py-1 sm:py-[10px] px-4 sm:px-6 text-[#4E4B66] rounded-lg'>
-            <p className='text-sm font-normal sm:font-semibold'>Thriller</p>
-          </div>
-          <div className='bg-transparent w-full h-full py-1 sm:py-[10px] px-4 sm:px-6 text-[#4E4B66] rounded-lg'>
-            <p className='text-sm font-normal sm:font-semibold'>Romantic</p>
-          </div>
-          <div className='bg-transparent w-full h-full py-1 sm:py-[10px] px-4 sm:px-6 text-[#4E4B66] rounded-lg'>
-            <p className='text-sm font-normal sm:font-semibold'>Adventure</p>
-          </div>
-          <div className='bg-transparent w-full h-full py-1 sm:py-[10px] px-4 sm:px-6 text-[#4E4B66] rounded-lg'>
-            <p className='text-sm font-normal sm:font-semibold'>Sci-fi</p>
-          </div>
+          {loading ? (
+            <>
+              <div className='bg-transparent w-full h-full py-1 sm:py-[10px] px-4 sm:px-6 text-[#4E4B66] rounded-lg animate-pulse'>
+                <p className='text-sm font-normal sm:font-semibold bg-gray-300 h-4 w-20 rounded'></p>
+              </div>
+              <div className='bg-transparent w-full h-full py-1 sm:py-[10px] px-4 sm:px-6 text-[#4E4B66] rounded-lg animate-pulse'>
+                <p className='text-sm font-normal sm:font-semibold bg-gray-300 h-4 w-20 rounded'></p>
+              </div>
+              <div className='bg-transparent w-full h-full py-1 sm:py-[10px] px-4 sm:px-6 text-[#4E4B66] rounded-lg animate-pulse'>
+                <p className='text-sm font-normal sm:font-semibold bg-gray-300 h-4 w-20 rounded'></p>
+              </div>
+              <div className='bg-transparent w-full h-full py-1 sm:py-[10px] px-4 sm:px-6 text-[#4E4B66] rounded-lg animate-pulse'>
+                <p className='text-sm font-normal sm:font-semibold bg-gray-300 h-4 w-20 rounded'></p>
+              </div>
+            </>
+          ) : (
+            <>
+              {genres.slice(0, 5).map((genre) => (
+                <Button
+                  key={genre.genre_id}
+                  variant='link'
+                  className='focus:bg-primary w-full h-full py-1 sm:py-[10px] px-4 sm:px-6 focus:text-white rounded-lg text-sm font-normal sm:font-semibold'
+                  onClick={() => onFilter(genre.genre_name)}>
+                  {genre.genre_name}
+                </Button>
+              ))}
+            </>
+          )}
         </div>
       </div>
     </div>

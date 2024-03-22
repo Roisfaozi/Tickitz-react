@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import logo from '../assets/logo.png'
 import { Button, buttonVariants } from './button'
 
 function Header() {
   // const location = useLocation()
+  const { isAuth } = useSelector((s) => s.users)
 
   const [isOpen, setIsOpen] = useState(false)
 
@@ -96,14 +98,27 @@ function Header() {
           </Button>
         </nav>
         <div className='sm:flex hidden items-center justify-items-center gap-3'>
-          <Link to='/login' className={buttonVariants({ variant: 'outline' })}>
-            {' '}
-            Log in
-          </Link>
-          <Link to='/register' className={buttonVariants()}>
-            {' '}
-            Sign Up
-          </Link>
+          {!isAuth ? (
+            <>
+              <Link
+                to='/login'
+                className={buttonVariants({ variant: 'outline' })}>
+                {' '}
+                Log in
+              </Link>
+              <Link to='/register' className={buttonVariants()}>
+                {' '}
+                Sign Up
+              </Link>
+            </>
+          ) : (
+            <Link
+              to='/admin/dashboard'
+              className={buttonVariants({ variant: 'outline' })}>
+              {' '}
+              Go to Dashboard
+            </Link>
+          )}
         </div>
       </header>
       {isOpen && (
