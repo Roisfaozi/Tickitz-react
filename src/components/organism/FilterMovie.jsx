@@ -28,10 +28,10 @@ function FilterMovie({ onSearch, onFilter }) {
 
     fetchGenres()
   }, [])
-  const handleSearchChange = (event) => {
+  const handleSearchChange = async (event) => {
     event.preventDefault()
     setSearchQuery(event.target.value)
-    onSearch(searchQuery)
+    await onSearch(searchQuery)
   }
 
   const handleSearchSubmit = (event) => {

@@ -2,7 +2,10 @@ import React from 'react'
 import MovieCard from './MovieCard'
 
 function MovieSection(props) {
-  const movies = props.movies.data
+  let movies
+  if (props.movies !== undefined || props.movies) {
+    movies = props.movies.data
+  }
 
   return (
     <div className='w-full py-[50px] px-3'>
@@ -20,7 +23,7 @@ function MovieSection(props) {
             {props.sectionTitle}
           </h2>
         </div>
-        {props.children}
+        {props.children && props.children}
       </div>
       <div className='md:overflow-x-auto overflow-x-scroll w-full h-full flex gap-6'>
         {props.loading ? (

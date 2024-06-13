@@ -4,32 +4,30 @@ import Header from '../components/Header'
 import MovieSection from '../components/MovieSection'
 import SubscribeSection from '../components/SubscribeSection'
 import HomeContent from '../components/organism/HomeContent'
+import useApi from '../hooks/useAPI'
 
 function Home() {
-  const [movies, setMovies] = useState([])
+  const [movies, setMovies] = useState()
   const [loading, setLoading] = useState(true)
+  const api = useApi()
   useEffect(() => {
-    async function fetchMovies() {
-      try {
-        setLoading(true)
-        const response = await fetch(
-          'http://localhost:8001/api/v1/movies?pageSize=10'
-        )
-        if (response.ok) {
-          const data = await response.json()
-          setMovies(data)
-        } else {
-          throw new Error('Failed to fetch movies')
-        }
-      } catch (error) {
-        console.tabel('Error fetching movies:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
     fetchMovies()
   }, [])
+  async function fetchMovies() {
+    try {
+      setLoading(true)
+      const response = await api.get(`/movies?pageSize=10`)
+      if (response.status === 200) {
+        setMovies(response.data.movies)
+      } else {
+        throw new Error('Failed to fetch movies')
+      }
+    } catch (error) {
+      console.error('Error fetching movies:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <>

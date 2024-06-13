@@ -26,7 +26,7 @@ function Detail() {
       setLoading(true)
       const response = await api.get(`/movies/${id}`)
       if (response.status === 200) {
-        setMovies(response.data)
+        setMovies(response.data.movie)
       } else {
         throw new Error('Failed to fetch movies')
       }

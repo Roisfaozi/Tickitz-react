@@ -36,7 +36,6 @@ function TableListMovie() {
   }, [currentPage])
 
   function setPageQuery(pages) {
-    console.log(pages)
     setCurrentPage(pages)
   }
 

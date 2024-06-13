@@ -4,7 +4,7 @@ import { convertMinutesToHoursAndMinutes } from '../../../lib/utils'
 
 function MovieInfo({ movie }) {
   const bgImage = `url(${movie.movie_id > 17 ? movie.poster_url : poster})`
-  const genre = movie.genres.split(', ')
+  const genre = movie.genres.split(',')
 
   return (
     <section className='lg:w-full md:w-[900px] w-[90%] max-w-desktop px-3 md:pb-0 pb-4 m-auto'>

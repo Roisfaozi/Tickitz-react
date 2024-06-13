@@ -29,9 +29,13 @@ function MoviesDisplay() {
       setLoading(true)
       const response = await api.get(`/movies?page=${page}&title=${title}`)
       if (response.status === 200) {
-        setMovies(response.data.data)
-        setTotalPages(Math.ceil(parseInt(response.data.meta.total) / 10))
-        setSearchParams({ page: page })
+        if (response.data.movies === 'data not found') {
+          setMovies(response.data.movies)
+        } else {
+          setMovies(response.data.movies.data)
+          setTotalPages(Math.ceil(parseInt(response.data.meta.total) / 10))
+          setSearchParams({ page: page })
+        }
       } else {
         throw new Error('Failed to fetch movies')
       }
@@ -42,10 +46,10 @@ function MoviesDisplay() {
     }
   }
 
-  function handleSearch(query) {
+  async function handleSearch(query) {
     setCurrentPage(1)
     setSearchParams({ page: currentPage })
-    fetchMovies(1, query)
+    await fetchMovies(1, query)
   }
 
   function goToNextPage() {
@@ -60,20 +64,24 @@ function MoviesDisplay() {
   function handleFilterGenre(genre) {
     setCurrentPage(1)
     setSearchParams({ page: currentPage })
-    setMovies(() => {
-      setLoading(true)
-      let filter = movies.filter((movie) => movie.genres.includes(genre))
-      if (filter.length < 1) {
-        filter = movies
-      }
-      setLoading(false)
-      return filter
-    })
+    if (typeof movies !== 'string') {
+      setMovies(() => {
+        setLoading(true)
+        let filter = movies.filter((movie) => movie.genres.includes(genre))
+        if (filter.length < 1) {
+          filter = movies
+        }
+        setLoading(false)
+        return filter
+      })
+    } else {
+      fetchMovies(1)
+    }
   }
-
   return (
     <section className='w-full h-full pt-12 m-auto max-w-desktop lg:px-0 px-[10px]'>
       <FilterMovie onSearch={handleSearch} onFilter={handleFilterGenre} />
+
       <MoviesGrid loading={loading} movies={movies} />
 
       <Pagination className='my-16 '>

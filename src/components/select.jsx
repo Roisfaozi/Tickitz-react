@@ -106,7 +106,6 @@ const Select = ({
   const updateValue = (value) => {
     setState((prevState) => ({ ...prevState, showOptions: false, value }))
   }
-
   return (
     <div className='relative '>
       <input type='hidden' name={name} value={value} />
@@ -118,7 +117,7 @@ const Select = ({
           {iconLeft}
         </span>
         <span className='flex items-center'>
-          <span className='block truncate '>{value}</span>
+          <span className='block truncate'>{value}</span>
         </span>
         <span className='ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none'>
           {icon}
@@ -127,9 +126,9 @@ const Select = ({
       {state.showOptions && (
         <div className='absolute mt-1 w-full z-10 rounded-md bg-white shadow-lg'>
           <ul className='max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm'>
-            {options.map((option, idx) => (
+            {options.map((option) => (
               <SelectOption
-                key={idx}
+                key={option}
                 value={option}
                 active={state.value === option}
                 updateValue={updateValue}

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Button } from '../../components/button'
 import { Input, Label } from '../../components/input'
 import Select from '../../components/select'
+import SelectDropdown from '../../components/selectDropdown'
 import useApi from '../../hooks/useAPI'
 
 function AddMovieForm() {
@@ -63,7 +64,6 @@ function AddMovieForm() {
     const datas = { ...data }
     datas[e.target.name] = e.target.value
     setData(datas)
-    console.log(data)
   }
 
   const fileHandler = (event) => {
@@ -72,7 +72,6 @@ function AddMovieForm() {
     if (file) {
       const tmpdata = { ...data }
       tmpdata['image'] = file
-      console.log(file, data)
 
       let reader = new FileReader()
       reader.onload = () => {
@@ -225,7 +224,7 @@ function AddMovieForm() {
           <Label for='director' className='text-titleInfo font-normal'>
             Director Name
           </Label>
-
+          <SelectDropdown />
           <Select
             name='genre'
             value={data.genre}
